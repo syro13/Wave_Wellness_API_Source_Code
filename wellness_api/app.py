@@ -18,7 +18,7 @@ test = [
 @app.route('/test', methods=['GET'])
 def get_test():
     return jsonify(test)
-
+@app.route('/')
 def hello():
     return "Hello, World!"
 
