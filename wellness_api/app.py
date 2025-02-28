@@ -1,26 +1,27 @@
 from flask import Flask, jsonify, request
+import json
 
 app = Flask(__name__)
-test = [
-    {
-        'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web',
-        'done': False
-    },
-]
-@app.route('/test', methods=['GET'])
-def get_test():
-    return jsonify(test)
+
+@app.route('/podcasts', methods=['GET'])
+def get_podcasts():
+    with open("..\\data_scrapper\\spotify_podcasts.json", 'r', encoding='utf-8') as file:
+        podcasts = json.load(file)
+    return jsonify(podcasts)
+@app.route('/blogs', methods=['GET'])
+def get_blogs():
+    with open("..\\data_scrapper\\irishlife_blogs.json", 'r', encoding='utf-8') as file:
+        blogs = json.load(file)
+    return jsonify(blogs)
 @app.route('/')
 def hello():
-    return "Hello, World!"
+    return (
+        """
+        <h3>Welcome to the Wave API</h3>
+        <p>Use <code>/podcasts</code> to get a list of available Spotify podcast episodes.</p>
+        <p>Use <code>/blogs</code> to get a list of available blogs to read.</p>
+        """
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
