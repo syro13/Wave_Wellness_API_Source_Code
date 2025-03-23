@@ -9,7 +9,6 @@ load_dotenv()
 app = Flask(__name__)
 
 API_KEY = os.environ.get("WAVE_API_KEY")
-print("Loaded API_KEY:", API_KEY) # Debugging
 
 # Auth decorator
 def require_api_key(f):
