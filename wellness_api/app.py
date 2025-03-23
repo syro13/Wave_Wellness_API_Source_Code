@@ -1,13 +1,28 @@
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 import json
+from functools import wraps
 
 app = Flask(__name__)
+
+# Example API key (in production, use env vars or a secrets manager)
+API_KEY = "a0f1d8c4-482a-47ba-b792-71586548e635"
+
+# Auth decorator
+def require_api_key(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        key = request.headers.get('X-API-Key')
+        if not key or key != API_KEY:
+            abort(401, description="Unauthorized: Invalid or missing API key")
+        return f(*args, **kwargs)
+    return decorated
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "..", "data_scrapper")
 
 @app.route('/podcasts', methods=['GET'])
+@require_api_key
 def get_podcasts():
     file_path = os.path.join(DATA_DIR, "spotify_podcasts.json")
     try:
@@ -18,6 +33,7 @@ def get_podcasts():
         return jsonify({"error": "File not found", "path": file_path}), 500
 
 @app.route('/blogs', methods=['GET'])
+@require_api_key
 def get_blogs():
     file_path = os.path.join(DATA_DIR, "irishlife_blogs.json")
     try:
