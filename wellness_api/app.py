@@ -2,6 +2,7 @@ import os
 from flask import Flask, jsonify, request, abort
 import json
 from functools import wraps
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
